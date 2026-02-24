@@ -1,23 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-import SplashScreen from "./screens/SplashScreen";
-import PhoneScreen from "./screens/PhoneScreen";
-import OTPScreen from "./screens/OTPScreen";
-import SuccessScreen from "./screens/SuccessScreen";
-
-const Stack = createNativeStackNavigator();
+import StackNavigator from "./navigation/StackNavigator";
 
 export default function App() {
+  const [initialRoute, setInitialRoute] = useState(null);
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = async () => {
+    const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+
+    if (isLoggedIn === "true") {
+      setInitialRoute("Success");
+    } else {
+      setInitialRoute("Phone");
+    }
+  };
+
+  if (!initialRoute) return null;
+
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Phone" component={PhoneScreen} />
-        <Stack.Screen name="OTP" component={OTPScreen} />
-        <Stack.Screen name="Success" component={SuccessScreen} />
-      </Stack.Navigator>
+      <StackNavigator initialRouteName={initialRoute} />
     </NavigationContainer>
   );
 }
