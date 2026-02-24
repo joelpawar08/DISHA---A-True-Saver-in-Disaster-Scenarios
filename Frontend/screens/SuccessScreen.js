@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  TouchableOpacity,
   Dimensions,
   SafeAreaView,
   ScrollView,
@@ -14,7 +13,7 @@ import * as Location from "expo-location";
 import { WebView } from "react-native-webview";
 import { Ionicons } from "@expo/vector-icons";
 
-const { width, height } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 
 export default function SuccessScreen({ route }) {
   const phoneNumber = route?.params?.phoneNumber || "+91 XXXXX XXXXX";
@@ -27,7 +26,9 @@ export default function SuccessScreen({ route }) {
   }, []);
 
   const getUserLocation = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
+    const { status } =
+      await Location.requestForegroundPermissionsAsync();
+
     if (status !== "granted") {
       alert("Location permission denied");
       return;
@@ -59,7 +60,7 @@ export default function SuccessScreen({ route }) {
     }
   };
 
-  // Distance calculator (Haversine formula)
+  // Haversine formula
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -76,7 +77,6 @@ export default function SuccessScreen({ route }) {
     return (R * c).toFixed(2);
   };
 
-  // Top 3 nearest hospitals
   const topHospitals = useMemo(() => {
     if (!location) return [];
 
@@ -133,7 +133,6 @@ export default function SuccessScreen({ route }) {
           safeZones.forEach(zone => {
 
             var iconColor = "#ff3b30";
-
             if(zone.type === "hospital") iconColor = "green";
             if(zone.type === "mall") iconColor = "purple";
             if(zone.type === "bunker") iconColor = "orange";
@@ -180,7 +179,7 @@ export default function SuccessScreen({ route }) {
           </View>
         )}
 
-        {/* TOP 3 NEAREST HOSPITALS */}
+        {/* TOP 3 HOSPITALS */}
         {location && topHospitals.length > 0 && (
           <View style={styles.hospitalSection}>
             <Text style={styles.sectionTitle}>
@@ -197,43 +196,12 @@ export default function SuccessScreen({ route }) {
                     {hospital.distance} km away
                   </Text>
                 </View>
-
-                <TouchableOpacity
-                  style={styles.directionBtn}
-                  onPress={() =>
-                    Linking.openURL(
-                      `https://www.google.com/maps/dir/?api=1&destination=${hospital.latitude},${hospital.longitude}`
-                    )
-                  }
-                >
-                  <Ionicons name="navigate" size={18} color="#fff" />
-                </TouchableOpacity>
               </View>
             ))}
           </View>
         )}
 
       </ScrollView>
-
-      {/* BOTTOM NAV */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity>
-          <Ionicons name="home" size={24} color="#000" />
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Ionicons name="alert-circle" size={30} color="red" />
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Ionicons name="cube" size={24} color="#000" />
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Ionicons name="settings" size={24} color="#000" />
-        </TouchableOpacity>
-      </View>
-
     </SafeAreaView>
   );
 }
@@ -253,8 +221,8 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 80,
-    height: 80,
+    width: 90,
+    height: 90,
     resizeMode: "contain",
   },
 
@@ -264,7 +232,7 @@ const styles = StyleSheet.create({
   },
 
   mapContainer: {
-    height: height * 0.65,
+    height: height * 0.6,
     marginHorizontal: 15,
     marginTop: 10,
     borderRadius: 25,
@@ -301,25 +269,5 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: 5,
     fontWeight: "600",
-  },
-
-  directionBtn: {
-    backgroundColor: "red",
-    padding: 10,
-    borderRadius: 50,
-  },
-
-  bottomNav: {
-    position: "absolute",
-    bottom: 25,
-    alignSelf: "center",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    width: width * 0.8,
-    height: 65,
-    backgroundColor: "#ffffff",
-    borderRadius: 40,
-    elevation: 12,
   },
 });

@@ -6,6 +6,7 @@ from typing import Dict
 from authentication.logic import send_otp, verify_otp_and_register
 from dotenv import load_dotenv
 import os
+from SOS.callpeeps import send_sos_alert
 from Maps.safeloc import get_nearest_safe_locations
 load_dotenv()
 
@@ -32,6 +33,30 @@ class LocationRequest(BaseModel):
     latitude: float
     longitude: float
 
+class SOSRequest(BaseModel):
+    latitude: float
+    longitude: float
+    emergency_contact: str
+
+
+
+@app.post("/sos")
+async def trigger_sos(data: SOSRequest):
+    try:
+        result = send_sos_alert(
+            emergency_contact=data.emergency_contact,
+            lat=data.latitude,
+            lon=data.longitude
+        )
+
+        return {
+            "message": "SOS alert sent successfully",
+            "details": result
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 @app.post("/safe-locations")
@@ -44,7 +69,7 @@ async def safe_locations(data: LocationRequest):
         return {"locations": results}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-        
+
 
 @app.post("/register")
 async def register_user(data: PhoneNumber):

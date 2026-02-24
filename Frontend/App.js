@@ -7,14 +7,14 @@ export default function App() {
   const [initialRoute, setInitialRoute] = useState(null);
 
   useEffect(() => {
-    checkLoginStatus();
+    checkLogin();
   }, []);
 
-  const checkLoginStatus = async () => {
+  const checkLogin = async () => {
     const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
 
     if (isLoggedIn === "true") {
-      setInitialRoute("Success");
+      setInitialRoute("MainTabs");
     } else {
       setInitialRoute("Phone");
     }
