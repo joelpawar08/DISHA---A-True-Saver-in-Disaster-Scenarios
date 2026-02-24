@@ -19,7 +19,7 @@ class OTPVerification(BaseModel):
     otp: str
 
 # In-memory storage for OTPs (not production-ready, loses data on restart)
-otp_storage: Dict[str, str] = {}
+otp_storage: Dict[str, Dict[str, any]] = {}  # Fixed typing to Dict[str, Dict[str, any]]
 
 # In-memory storage for registered users (demo only)
 registered_users: Dict[str, bool] = {}
@@ -36,7 +36,7 @@ async def register_user(data: PhoneNumber):
 async def verify_user(data: OTPVerification):
     try:
         if verify_otp_and_register(data.phone, data.otp, otp_storage, registered_users):
-            return {"message": "Registration and verification successful"}
+            return {"message": "Registration and verification successful. For calling features, manually add this number as a verified caller ID in Twilio console via SMS."}
         else:
             raise HTTPException(status_code=400, detail="Invalid OTP")
     except Exception as e:

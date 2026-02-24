@@ -1,15 +1,19 @@
 # authentication/logic.py - Main business logic
 
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+# authentication/logic.py - Main business logic
+
 import os
 import random
 import time
 from typing import Dict
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
 
 # Twilio credentials from environment variables
 TWILIO_SID = os.environ.get("TWILIO_SID")
@@ -50,16 +54,10 @@ def verify_otp_and_register(phone: str, otp: str, otp_storage: Dict[str, Dict[st
     if stored["otp"] != otp:
         return False
     
-    # Register in Twilio as verified caller ID
-    try:
-        client.validation_requests.create(
-            friendly_name=phone,
-            phone_number=phone
-        )
-        # Note: This triggers a verification call/SMS from Twilio; for auto-registration, assume user confirms it separately if needed.
-        # In free tier, this adds to verified numbers.
-    except TwilioRestException as e:
-        raise ValueError(f"Failed to register number: {e.msg}")
+    # Removed Twilio API registration due to trial limitations.
+    # Manually add the number in Twilio console (Verified Caller IDs) using SMS method to enable calls.
+    # If account is upgraded, you can add: client.outgoing_caller_ids.create(phone_number=phone, friendly_name=phone)
+    # This would trigger a voice verification (user enters code), but not supported in trial.
     
     # Mark as registered in memory
     registered_users[phone] = True

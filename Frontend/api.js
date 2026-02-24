@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1/:8000";
+const BASE_URL = "https://disha-a-true-saver-in-disaster-scenarios.onrender.com";
 
 export const sendOTP = async (phone) => {
   const response = await fetch(`${BASE_URL}/register`, {
