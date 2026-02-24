@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Image,
 } from "react-native";
 import { sendOTP } from "../api";
 
@@ -32,6 +33,13 @@ export default function PhoneScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+
+      {/* TOP IMAGE */}
+      <Image
+        source={require("../assets/lotties/1.png")}
+        style={styles.topImage}
+      />
+
       <Text style={styles.title}>Enter your mobile number</Text>
 
       <View style={styles.inputContainer}>
@@ -55,6 +63,7 @@ export default function PhoneScreen({ navigation }) {
           {loading ? "Sending..." : "Continue"}
         </Text>
       </TouchableOpacity>
+
     </View>
   );
 }
@@ -66,11 +75,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#ffffff",
   },
+
+  topImage: {
+    width: 250,
+    height: 250,
+    resizeMode: "contain",
+    alignSelf: "center",
+    marginBottom: 30,
+  },
+
   title: {
     fontSize: 22,
     fontWeight: "600",
     marginBottom: 20,
+    textAlign: "center",
   },
+
   inputContainer: {
     flexDirection: "row",
     borderWidth: 1,
@@ -80,21 +100,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
+
   code: {
     fontSize: 16,
     marginRight: 8,
     color: "#555",
   },
+
   input: {
     flex: 1,
     fontSize: 16,
   },
+
   button: {
     backgroundColor: "#000",
     padding: 16,
     borderRadius: 12,
     alignItems: "center",
   },
+
   buttonText: {
     color: "#fff",
     fontWeight: "600",
